@@ -16,7 +16,7 @@ def get_assistant_answer(
             messages=[
                 {
                     "role": "assistant",
-                    "content": "Soy un asistente médico especializado en recolectar información clínica. ¿Cómo puedo ayudarte hoy?",
+                    "content": "Hola, soy el Doc. Me gustaría hacerte unas preguntas para entender un poco mejor tu situación. ¿Te parece?",
                 }
             ]
         )
