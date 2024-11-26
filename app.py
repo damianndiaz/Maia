@@ -45,10 +45,6 @@ def main():
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Mostrar mensaje inicial
-    if len(st.session_state.messages) == 0:
-        st.session_state.messages.append({"role": "assistant", "content": "Hola, soy el Doc. Me gustaría hacerte unas preguntas para entender un poco mejor tu situación. ¿Te parece?"})
-
     # Mostrar los mensajes en la conversación
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
