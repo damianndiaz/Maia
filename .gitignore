@@ -1,0 +1,8 @@
+# Ignorar archivos .env que contienen claves API
+.env
+
+# Ignorar el archivo de configuración de Streamlit si es necesario
+.streamlit/
+
+# Ignorar archivos de DevContainer
+.devcontainer/
