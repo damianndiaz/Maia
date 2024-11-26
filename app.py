@@ -24,7 +24,7 @@ def main():
     st.set_page_config(page_title="Asistente Médico", page_icon=":speech_balloon:")
 
     # Mostrar título y descripción
-    st.title("Asistente Médico")
+    st.title("🤖 Doc IA")
     st.write("Asistente médico especializado en recolectar información clínica.")
 
     # Autenticación
