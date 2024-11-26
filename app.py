@@ -26,7 +26,7 @@ def main():
 
     # Mostrar título y descripción.
     st.title("🤖 Doc IA")
-    st.write("Asistente médico especializado en recoger información clínica para facilitar la entrevista.")
+    st.write("Asistente médico especializado en recoger información clínica.")
 
     # Autenticación
     password = st.text_input("Ingrese la clave de la aplicación", type="password")
@@ -50,7 +50,7 @@ def main():
 
         # Mensaje inicial del asistente
         if len(st.session_state.messages) == 0:
-            initial_message = "Hola, soy el asistente médico. Vamos a realizar algunas preguntas para poder ayudarte mejor. ¿Listo para comenzar?"
+            initial_message = "Hola, soy el Doc. Vamos a realizar algunas preguntas para poder ayudarte mejor. ¿Listo para comenzar?"
             st.session_state.messages.append({"role": "assistant", "content": initial_message})
 
         # Muestra los mensajes en la conversación
