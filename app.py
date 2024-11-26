@@ -28,11 +28,15 @@ def main():
     st.write("Asistente médico especializado en recolectar información clínica.")
 
     # Autenticación
-    password = st.text_input("Ingresa la clave de la aplicación", type="password")
+    password = st.text_input("Ingrese la clave de la aplicación", type="password")
 
-    if password != app_password:
-        st.info("La clave provista es incorrecta.", icon="🗝️")
-        return
+    if not password:
+        st.info("Por favor, ingrese la clave de la aplicación para continuar.", icon="🗝️")
+    else:
+        if password != st.secrets["app_password"]:
+            st.info("La clave provista es incorrecta.", icon="🗝️")
+        else: 
+            proceed = True
 
     # Verificamos si 'thread_id' está en session_state
     if "thread_id" not in st.session_state:
