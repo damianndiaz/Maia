@@ -4,7 +4,7 @@ def get_assistant_answer(
     client,
     user_msg: str = None,
     thread_id: str = None,
-    assistant_id: str = "asst_2DXH2teVZyweB0gc1v1t4NsQ"
+    assistant_id: str = "asst_5LOtpCJ117xkaOpCxr0MhPNA"
 ):
 
     # Si no hay thread_id, generamos uno nuevo
