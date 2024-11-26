@@ -21,6 +21,7 @@ else:
     
 # Inicializamos la app de Streamlit
 def main():
+    proceed = False
     st.set_page_config(page_title="Doc IA", page_icon=":speech_balloon:")
 
     # Mostrar título y descripción.
