@@ -51,7 +51,7 @@ def main():
 
     # Mensaje inicial del asistente
     if len(st.session_state.messages) == 0:
-        initial_message = "Hola, ¿en qué puedo ayudarte hoy en relación a los estudios de Phytobiotics?"
+        initial_message = "Hola, soy el Doc. Me gustaría hacerte unas preguntas para entender un poco mejor tu situación. ¿Te parece?"
         st.session_state.messages.append({"role": "assistant", "content": initial_message})
 
     # Muestra los mensajes en la conversación
