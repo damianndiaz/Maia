@@ -20,7 +20,6 @@ else:
     st.stop()  # Detiene la ejecución si no se encuentra la clave
     
 # Inicializamos la app de Streamlit
-# Inicializamos la app de Streamlit
 def main():
     st.set_page_config(page_title="Asistente Médico", page_icon=":speech_balloon:")
 
@@ -39,12 +38,16 @@ def main():
         else: 
             proceed = True
 
-    # Inicializamos el estado de sesión para thread_id y mensajes
+    # Verificamos si 'thread_id' está en session_state
     if "thread_id" not in st.session_state:
         st.session_state.thread_id = None
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
+
+    # Si no hay mensajes, agregar el mensaje de bienvenida siempre
+    if len(st.session_state.messages) == 0:
+        st.session_state.messages.append({"role": "assistant", "content": "Hola, soy el Doc. Me gustaría hacerte unas preguntas para entender un poco mejor tu situación. ¿Te parece?"})
 
     # Mostrar los mensajes de la conversación
     for message in st.session_state.messages:
