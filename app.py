@@ -20,6 +20,7 @@ else:
     st.stop()  # Detiene la ejecución si no se encuentra la clave
     
 # Inicializamos la app de Streamlit
+# Inicializamos la app de Streamlit
 def main():
     st.set_page_config(page_title="Asistente Médico", page_icon=":speech_balloon:")
 
@@ -38,14 +39,14 @@ def main():
         else: 
             proceed = True
 
-    # Verificamos si 'thread_id' está en session_state
+    # Inicializamos el estado de sesión para thread_id y mensajes
     if "thread_id" not in st.session_state:
         st.session_state.thread_id = None
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Mostrar los mensajes en la conversación
+    # Mostrar los mensajes de la conversación
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
@@ -57,15 +58,15 @@ def main():
         # Añadir el mensaje del usuario a la sesión
         st.session_state.messages.append({"role": "user", "content": user_input})
 
-        # Llamar al asistente
+        # Llamar al asistente para obtener una respuesta
         assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
         assistant_answer = assistant_response["assistant_answer_text"]
         st.session_state.thread_id = assistant_response["thread_id"]  # Actualizamos el thread_id
 
-        # Mostrar la respuesta del asistente
+        # Mostrar la respuesta del asistente en la interfaz
         st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
 
-        # Mostrar la respuesta del asistente en la interfaz de Streamlit
+        # Mostrar el mensaje del asistente en la interfaz de Streamlit
         with st.chat_message("assistant"):
             st.markdown(assistant_answer)
 
