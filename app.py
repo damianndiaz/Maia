@@ -21,6 +21,8 @@ else:
     
 # Inicializamos la app de Streamlit
 def main():
+    
+    # Configuración de la página debe ser lo primero
     st.set_page_config(page_title="Asistente Médico", page_icon=":speech_balloon:")
 
     # Mostrar título y descripción
