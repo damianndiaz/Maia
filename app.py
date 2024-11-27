@@ -32,11 +32,13 @@ def main():
 
     if not password:
         st.info("Por favor, ingrese la clave de la aplicación para continuar.", icon="🗝️")
-    else:
-        if password != st.secrets["app_password"]:
-            st.info("La clave provista es incorrecta.", icon="🗝️")
-        else: 
-            proceed = True
+        st.stop()  # Detiene la ejecución si no se ha ingresado la clave
+
+    if password != st.secrets["app_password"]:
+        st.info("La clave provista es incorrecta.", icon="🗝️")
+        st.stop()  # Detiene la ejecución si la clave es incorrecta
+
+    proceed = True  # Continuar después de la validación de la clave
 
     # Verificamos si 'thread_id' está en session_state
     if "thread_id" not in st.session_state:
@@ -60,6 +62,10 @@ def main():
     if user_input:
         # Añadir el mensaje del usuario a la sesión
         st.session_state.messages.append({"role": "user", "content": user_input})
+
+        # Mostrar el mensaje del usuario de inmediato en la interfaz
+        with st.chat_message("user"):
+            st.markdown(user_input)
 
         # Llamar al asistente para obtener una respuesta
         assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
