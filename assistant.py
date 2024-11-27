@@ -49,6 +49,10 @@ def get_assistant_answer(
         messages = client.beta.threads.messages.list(thread_id=thread_id)
         assistant_answer = messages.data[-1].content  # Tomamos el último mensaje como respuesta
 
+        # Aseguramos que solo se devuelva texto limpio (sin bloques extraños como TextContentBlock)
+        if isinstance(assistant_answer, dict):
+            assistant_answer = assistant_answer.get('value', '')
+
         print(f"Respuesta del asistente: {assistant_answer}")
 
         return {
@@ -59,3 +63,4 @@ def get_assistant_answer(
     else:
         print("La corrida del asistente requiere acciones.")
         return {"error": "Asistente requiere acciones adicionales."}
+
