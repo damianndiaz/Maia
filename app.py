@@ -58,26 +58,25 @@ def main():
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # Input del usuario
-    user_input = st.chat_input("Escribe tu mensaje aquí...")
+# Input del usuario
+user_input = st.chat_input("Escribe tu mensaje aquí...")
 
-    # Cuando el usuario envía un mensaje
-    if user_input:
-        # Añade el mensaje del usuario a la sesión
-        st.session_state.messages.append({"role": "user", "content": user_input})
-        with st.chat_message("user"):
-            st.markdown(user_input)
+ # Cuando el usuario envía un mensaje
+if user_input:
+    # Añadir el mensaje del usuario a la sesión
+    st.session_state.messages.append({"role": "user", "content": user_input})
 
-    # Envía el mensaje al modelo de OpenAI
+    # Llamar al asistente
     assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
-    answer = assistant_response["assistant_answer_text"]
+    assistant_answer = assistant_response["assistant_answer_text"]
     st.session_state.thread_id = assistant_response["thread_id"]  # Actualizamos el thread_id
-    print(f"thread id de la conversación: {st.session_state.thread_id}")
 
-    # Añade la respuesta del asistente a la sesión
-        st.session_state.messages.append({"role": "assistant", "content": answer})
-        with st.chat_message("assistant"):
-            st.markdown(answer)
+    # Mostrar la respuesta del asistente
+    st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
+
+    # Mostrar la respuesta del asistente en la interfaz de Streamlit
+    with st.chat_message("assistant"):
+        st.markdown(assistant_answer)
 
 # Run the Streamlit app
 if __name__ == '__main__':
