@@ -1,5 +1,7 @@
 import json
 
+import json
+
 def get_assistant_answer(
     client,
     user_msg: str = None,
@@ -7,7 +9,7 @@ def get_assistant_answer(
     assistant_id: str = "asst_5LOtpCJ117xkaOpCxr0MhPNA"
 ):
 
-    # Si no hay thread_id, generamos uno nuevo
+    # Si no hay thread_id, generamos uno nuevo y enviamos el mensaje de bienvenida
     if not thread_id:
         print("Generando nuevo thread...")
 
@@ -21,9 +23,7 @@ def get_assistant_answer(
             ]
         )
         thread_id = thread.id  # Asignamos el nuevo thread_id
-
         print(f"Nuevo thread creado. ID: {thread_id}")
-
     else:
         print(f"Usando thread_id existente: {thread_id}")
 
@@ -57,5 +57,8 @@ def get_assistant_answer(
             "tool_output_details": None
         }
     else:
+        print("La corrida del asistente requiere acciones.")
+        return {"error": "Asistente requiere acciones adicionales."}
+
         print("La corrida del asistente requiere acciones.")
         return {"error": "Asistente requiere acciones adicionales."}
