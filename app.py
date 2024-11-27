@@ -35,8 +35,8 @@ def main():
     else:
         if password != st.secrets["app_password"]:
             st.info("La clave provista es incorrecta.", icon="🗝️")
-    else: 
-        proceed = True
+        else: 
+            proceed = True
 
     # Verificamos si 'thread_id' está en session_state
     if "thread_id" not in st.session_state:
