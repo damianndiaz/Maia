@@ -1,19 +1,16 @@
 import json
 
-import json
-
 def get_assistant_answer(
     client,
     user_msg: str = None,
     thread_id: str = None,
     assistant_id: str = "asst_5LOtpCJ117xkaOpCxr0MhPNA"
 ):
-
-    # Si no hay thread_id, generamos uno nuevo y enviamos el mensaje de bienvenida
+    # Si no hay thread_id, generamos uno nuevo
     if not thread_id:
         print("Generando nuevo thread...")
 
-        # Crear un nuevo hilo con un mensaje inicial
+        # Crear un nuevo hilo con un mensaje inicial (mensaje de bienvenida)
         thread = client.beta.threads.create(
             messages=[
                 {
@@ -24,8 +21,19 @@ def get_assistant_answer(
         )
         thread_id = thread.id  # Asignamos el nuevo thread_id
         print(f"Nuevo thread creado. ID: {thread_id}")
+
     else:
         print(f"Usando thread_id existente: {thread_id}")
+
+    # Asegurarnos de que el mensaje de bienvenida solo se muestre una vez
+    if len(client.beta.threads.messages.list(thread_id=thread_id).data) == 1:
+        # Se verifica si es la primera interacción del thread
+        message = client.beta.threads.messages.create(
+            thread_id=thread_id,
+            role="assistant",
+            content="Hola, soy el Doc. Me gustaría hacerte unas preguntas para entender un poco mejor tu situación. ¿Te parece?"
+        )
+        print(f"Mensaje de bienvenida enviado.")
 
     # Crear el mensaje del usuario en el hilo
     message = client.beta.threads.messages.create(
@@ -57,8 +65,5 @@ def get_assistant_answer(
             "tool_output_details": None
         }
     else:
-        print("La corrida del asistente requiere acciones.")
-        return {"error": "Asistente requiere acciones adicionales."}
-
         print("La corrida del asistente requiere acciones.")
         return {"error": "Asistente requiere acciones adicionales."}
