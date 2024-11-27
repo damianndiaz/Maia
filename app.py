@@ -4,6 +4,8 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
+st.set_page_config(page_title="Asistente Médico", page_icon=":speech_balloon:")
+
 # Cargar la clave API de OpenAI desde el archivo .env (o desde Streamlit secrets)
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
@@ -22,9 +24,6 @@ else:
 # Inicializamos la app de Streamlit
 def main():
     
-    # Configuración de la página debe ser lo primero
-    st.set_page_config(page_title="Asistente Médico", page_icon=":speech_balloon:")
-
     # Mostrar título y descripción
     st.title("🤖 Doc IA")
     st.write("Asistente médico especializado en recolectar información clínica.")
