@@ -4,7 +4,7 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
-st.set_page_config(page_title="Asistente Médico", page_icon=":speech_balloon:")
+st.set_page_config(page_title="Asistente Médica", page_icon=":speech_balloon:")
 
 # Cargar la clave API de OpenAI desde el archivo .env (o desde Streamlit secrets)
 openai_api_key = st.secrets["OPENAI_API_KEY"]
@@ -25,8 +25,8 @@ else:
 def main():
     
     # Mostrar título y descripción
-    st.title("👩🏼‍⚕️ Doc IA")
-    st.write("Asistente médico especializado en recolectar información clínica.")
+    st.title("👩🏼‍⚕️ Maia")
+    st.write("Asistente médica especializada en recolectar información clínica.")
 
     # Autenticación
     password = st.text_input("Ingrese la clave de la aplicación", type="password")
@@ -51,7 +51,7 @@ def main():
 
     # Mensaje inicial del asistente
     if len(st.session_state.messages) == 0:
-        initial_message = "Hola, soy el Doc. Me gustaría hacerte unas preguntas para entender un poco mejor tu situación. ¿Te parece?"
+        initial_message = "Hola, soy Maia. Me gustaría hacerte unas preguntas para entender un poco mejor tu situación. ¿Te parece?"
         st.session_state.messages.append({"role": "assistant", "content": initial_message})
 
     # Muestra los mensajes en la conversación
