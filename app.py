@@ -25,7 +25,7 @@ else:
 def main():
     
     # Mostrar título y descripción
-    st.title("🧑🏼‍⚕️ Doc IA")
+    st.title("👩🏼‍⚕️ Doc IA")
     st.write("Asistente médico especializado en recolectar información clínica.")
 
     # Autenticación
