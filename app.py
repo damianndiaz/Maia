@@ -4,7 +4,7 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
-st.set_page_config(page_title="Asistente Médica", page_icon=":speech_balloon:")
+st.set_page_config(page_title="Maia AI", page_icon=":speech_balloon:")
 
 # Cargar la clave API de OpenAI desde el archivo .env (o desde Streamlit secrets)
 openai_api_key = st.secrets["OPENAI_API_KEY"]
