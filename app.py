@@ -56,19 +56,19 @@ def main():
     # Obtener la entrada del usuario desde la interfaz de chat
     user_input = st.chat_input("Escribe tu mensaje...")
 
-    # Verificar si el usuario ha escrito algo antes de procesarlo
-    if user_input:
-    # Llamar a la función de asistencia con la entrada del usuario y el thread_id actual
+# Verificar si el usuario ha escrito algo antes de procesarlo
+if user_input:
+    # Llamar a la función get_assistant_answer
     assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
 
-    # Verificar si la respuesta es válida y procesar la respuesta
+    # Verificar si la respuesta es válida y asignar la respuesta
     if assistant_response:
         assistant_answer = assistant_response.get("assistant_answer_text", "No se pudo obtener la respuesta.")
-        st.session_state.thread_id = assistant_response.get("thread_id", st.session_state.thread_id)  # Actualizamos el thread_id si se obtuvo correctamente
+        st.session_state.thread_id = assistant_response.get("thread_id", st.session_state.thread_id)  # Actualizar thread_id
     else:
         assistant_answer = "Hubo un error al procesar la solicitud."
 
-    # Mostrar la respuesta del asistente en la interfaz de usuario
+    # Agregar el mensaje del asistente al estado de la sesión y mostrarlo en la interfaz
     st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
     with st.chat_message("assistant"):
         st.markdown(assistant_answer)
