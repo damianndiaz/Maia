@@ -58,7 +58,6 @@ def main():
 
     # Verificar si el usuario ha escrito algo antes de procesarlo
     if user_input:
-        
     # Llamar a la función de asistencia con la entrada del usuario y el thread_id actual
     assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
 
