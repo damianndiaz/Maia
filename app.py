@@ -53,30 +53,27 @@ def main():
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # Entrada del usuario
+    # Obtener la entrada del usuario desde la interfaz de chat
     user_input = st.chat_input("Escribe tu mensaje...")
 
+    # Verificar si el usuario ha escrito algo antes de procesarlo
     if user_input:
-        # Añadir el mensaje del usuario
-        st.session_state.messages.append({"role": "user", "content": user_input})
+        
+    # Llamar a la función de asistencia con la entrada del usuario y el thread_id actual
+    assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
 
-        # Llamar al asistente
-assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
+    # Verificar si la respuesta es válida y procesar la respuesta
+    if assistant_response:
+        assistant_answer = assistant_response.get("assistant_answer_text", "No se pudo obtener la respuesta.")
+        st.session_state.thread_id = assistant_response.get("thread_id", st.session_state.thread_id)  # Actualizamos el thread_id si se obtuvo correctamente
+    else:
+        assistant_answer = "Hubo un error al procesar la solicitud."
 
-# Verificar si la respuesta no es None antes de intentar acceder a los datos
-if assistant_response:
-    assistant_answer = assistant_response.get("assistant_answer_text", "No se pudo obtener la respuesta.")
-    st.session_state.thread_id = assistant_response.get("thread_id", st.session_state.thread_id)  # Actualizamos el thread_id si se obtuvo correctamente
-else:
-    assistant_answer = "Hubo un error al procesar la solicitud."
-
-# Mostrar la respuesta del asistente
-st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
-
-# Mostrar la respuesta en la interfaz de usuario
-with st.chat_message("assistant"):
-    st.markdown(assistant_answer)
-
+    # Mostrar la respuesta del asistente en la interfaz de usuario
+    st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
+    with st.chat_message("assistant"):
+        st.markdown(assistant_answer)
+        
 # Ejecutar la aplicación de Streamlit
 if __name__ == "__main__":
     main()
