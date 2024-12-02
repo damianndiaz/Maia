@@ -61,15 +61,21 @@ def main():
         st.session_state.messages.append({"role": "user", "content": user_input})
 
         # Llamar al asistente
-        assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
-        assistant_answer = assistant_response["assistant_answer_text"]
-        st.session_state.thread_id = assistant_response["thread_id"]
+assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
 
-        # Mostrar la respuesta del asistente
-        st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
+# Verificar si la respuesta no es None antes de intentar acceder a los datos
+if assistant_response:
+    assistant_answer = assistant_response.get("assistant_answer_text", "No se pudo obtener la respuesta.")
+    st.session_state.thread_id = assistant_response.get("thread_id", st.session_state.thread_id)  # Actualizamos el thread_id si se obtuvo correctamente
+else:
+    assistant_answer = "Hubo un error al procesar la solicitud."
 
-        with st.chat_message("assistant"):
-            st.markdown(assistant_answer)
+# Mostrar la respuesta del asistente
+st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
+
+# Mostrar la respuesta en la interfaz de usuario
+with st.chat_message("assistant"):
+    st.markdown(assistant_answer)
 
 # Ejecutar la aplicación de Streamlit
 if __name__ == "__main__":
