@@ -31,54 +31,46 @@ def main():
     # Autenticación
     password = st.text_input("Ingrese la clave de la aplicación", type="password")
 
+      # Autenticación
+    password = st.text_input("Ingrese la clave de la aplicación", type="password")
     if not password:
         st.info("Por favor, ingrese la clave de la aplicación para continuar.", icon="🗝️")
-        st.stop()  # Detiene la ejecución si no se ha ingresado la clave
+        return
 
     if password != st.secrets["app_password"]:
         st.info("La clave provista es incorrecta.", icon="🗝️")
-        st.stop()  # Detiene la ejecución si la clave es incorrecta
+        return
 
-    proceed = True  # Continuar después de la validación de la clave
-
-    # Verificamos si 'thread_id' está en session_state, si no, lo inicializamos
+    # Verificamos si 'thread_id' está en session_state
     if "thread_id" not in st.session_state:
         st.session_state.thread_id = None
 
-    # Inicializamos el historial de mensajes si no está en session_state
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Mensaje inicial del asistente
-    if len(st.session_state.messages) == 0:
-        initial_message = "Hola, soy Maia. Me gustaría hacerte unas preguntas para entender un poco mejor tu situación. ¿Te parece?"
-        st.session_state.messages.append({"role": "assistant", "content": initial_message})
-
-    # Muestra los mensajes en la conversación
+    # Mostrar los mensajes en la conversación
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-# Input del usuario
-user_input = st.chat_input("Escribe tu mensaje aquí...")
+    # Entrada del usuario
+    user_input = st.chat_input("Escribe tu mensaje...")
 
- # Cuando el usuario envía un mensaje
-if user_input:
-    # Añadir el mensaje del usuario a la sesión
-    st.session_state.messages.append({"role": "user", "content": user_input})
+    if user_input:
+        # Añadir el mensaje del usuario
+        st.session_state.messages.append({"role": "user", "content": user_input})
 
-    # Llamar al asistente
-    assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
-    assistant_answer = assistant_response["assistant_answer_text"]
-    st.session_state.thread_id = assistant_response["thread_id"]  # Actualizamos el thread_id
+        # Llamar al asistente
+        assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
+        assistant_answer = assistant_response["assistant_answer_text"]
+        st.session_state.thread_id = assistant_response["thread_id"]
 
-    # Mostrar la respuesta del asistente
-    st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
+        # Mostrar la respuesta del asistente
+        st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
 
-    # Mostrar la respuesta del asistente en la interfaz de Streamlit
-    with st.chat_message("assistant"):
-        st.markdown(assistant_answer)
+        with st.chat_message("assistant"):
+            st.markdown(assistant_answer)
 
-# Run the Streamlit app
-if __name__ == '__main__':
+# Ejecutar la aplicación de Streamlit
+if __name__ == "__main__":
     main()
