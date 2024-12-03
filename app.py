@@ -52,7 +52,7 @@ def main():
         st.session_state.messages = []
 
     # Agregar el mensaje de bienvenida al historial de mensajes
-    st.session_state.messages.append({"role": "assistant", "content": "Hola, soy Maia, tu asistente médica. Te voy a hacer algunas preguntas para entender mejor tu situación y poder ayudarte."})
+    st.session_state.messages.append({"role": "assistant", "content": "Hola, soy Maia, tu asistente médica. Te voy a hacer algunas preguntas para entender mejor tu situación y poder ayudarte, ¿te parece?."})
 
     # Mostrar los mensajes en la conversación
     for message in st.session_state.messages:
