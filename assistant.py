@@ -9,7 +9,7 @@ def get_assistant_answer(client, user_msg, thread_id=None, assistant_id="asst_5L
         print("Generando nuevo thread...")
         thread = client.beta.threads.create(
             messages=[
-                {"role": "assistant", "content": "Hola, soy el Doc. Me gustaría hacerte unas preguntas para entender mejor tu situación. ¿Te parece?"}
+                {"role": "assistant", "content"
             ]
         )
         thread_id = thread.id
