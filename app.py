@@ -31,8 +31,6 @@ def main():
     # Autenticación
     password = st.text_input("Ingrese la clave de la aplicación", type="password")
 
-      # Autenticación
-    password = st.text_input("Ingrese la clave de la aplicación", type="password")
     if not password:
         st.info("Por favor, ingrese la clave de la aplicación para continuar.", icon="🗝️")
         return
@@ -56,25 +54,22 @@ def main():
     # Obtener la entrada del usuario desde la interfaz de chat
     user_input = st.chat_input("Escribe tu mensaje...")
 
-# Inicializa user_input con la entrada del chat
-user_input = st.chat_input("Escribe tu mensaje...")
+    # Verificar si el usuario escribió algo antes de procesarlo
+    if user_input:
+        # Llamar a la función get_assistant_answer
+        assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
 
-# Verificar si el usuario escribió algo antes de procesarlo
-if user_input:
-    # Llamar a la función get_assistant_answer
-    assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
+        # Verificar si la respuesta es válida y asignar la respuesta
+        if assistant_response:
+            assistant_answer = assistant_response.get("assistant_answer_text", "No se pudo obtener la respuesta.")
+            st.session_state.thread_id = assistant_response.get("thread_id", st.session_state.thread_id)  # Actualizar thread_id
+        else:
+            assistant_answer = "Hubo un error al procesar la solicitud."
 
-    # Verificar si la respuesta es válida y asignar la respuesta
-    if assistant_response:
-        assistant_answer = assistant_response.get("assistant_answer_text", "No se pudo obtener la respuesta.")
-        st.session_state.thread_id = assistant_response.get("thread_id", st.session_state.thread_id)  # Actualizar thread_id
-    else:
-        assistant_answer = "Hubo un error al procesar la solicitud."
-
-    # Agregar el mensaje del asistente al estado de la sesión y mostrarlo en la interfaz
-    st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
-    with st.chat_message("assistant"):
-        st.markdown(assistant_answer)
+        # Agregar el mensaje del asistente al estado de la sesión y mostrarlo en la interfaz
+        st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
+        with st.chat_message("assistant"):
+            st.markdown(assistant_answer)
 
 # Ejecutar la aplicación de Streamlit
 if __name__ == "__main__":
