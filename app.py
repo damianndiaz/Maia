@@ -56,7 +56,10 @@ def main():
     # Obtener la entrada del usuario desde la interfaz de chat
     user_input = st.chat_input("Escribe tu mensaje...")
 
-# Verificar si el usuario ha escrito algo antes de procesarlo
+# Inicializa user_input con la entrada del chat
+user_input = st.chat_input("Escribe tu mensaje...")
+
+# Verificar si el usuario escribió algo antes de procesarlo
 if user_input:
     # Llamar a la función get_assistant_answer
     assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
@@ -72,7 +75,7 @@ if user_input:
     st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
     with st.chat_message("assistant"):
         st.markdown(assistant_answer)
-        
+
 # Ejecutar la aplicación de Streamlit
 if __name__ == "__main__":
     main()
