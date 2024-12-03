@@ -40,10 +40,6 @@ def main():
         st.info("La clave provista es incorrecta.", icon="🗝️")
         return
 
-    # Mostrar mensaje de bienvenida
-    st.success("¡Clave correcta! Bienvenido al sistema de atención médica.")
-  
-
     # Verificamos si 'thread_id' está en session_state
     if "thread_id" not in st.session_state:
         st.session_state.thread_id = None
@@ -51,8 +47,13 @@ def main():
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Agregar el mensaje de bienvenida al historial de mensajes
-    st.session_state.messages.append({"role": "assistant", "content": "Hola, soy Maia, tu asistente médica. Te voy a hacer algunas preguntas para entender mejor tu situación y poder ayudarte, ¿te parece?."})
+    # Mostrar el mensaje de bienvenida solo una vez después de la clave correcta
+    if not st.session_state.get("welcome_message_shown", False):
+        st.session_state.messages.append({
+            "role": "assistant", 
+            "content": "¡Clave correcta! Bienvenido al sistema de atención médica. Hola, soy Maia, tu asistente médica. Te voy a hacer algunas preguntas para entender mejor tu situación y poder ayudarte."
+        })
+        st.session_state.welcome_message_shown = True  # Marca que ya se mostró el mensaje de bienvenida.
 
     # Mostrar los mensajes en la conversación
     for message in st.session_state.messages:
