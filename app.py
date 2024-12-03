@@ -40,9 +40,9 @@ def main():
         st.info("La clave provista es incorrecta.", icon="🗝️")
         return
 
-    # Mostrar mensaje de bienvenida y presentación de Maia
+    # Mostrar mensaje de bienvenida
     st.success("¡Clave correcta! Bienvenido al sistema de atención médica.")
-    st.write("Hola, soy Maia, tu asistente médica. Te voy a hacer algunas preguntas para entender mejor tu situación y poder ayudarte. ¿Comenzamos?")
+  
 
     # Verificamos si 'thread_id' está en session_state
     if "thread_id" not in st.session_state:
