@@ -31,6 +31,7 @@ def main():
     # Autenticación
     password = st.text_input("Ingrese la clave de la aplicación", type="password")
 
+    # Validamos la clave
     if not password:
         st.info("Por favor, ingrese la clave de la aplicación para continuar.", icon="🗝️")
         return
@@ -39,7 +40,7 @@ def main():
         st.info("La clave provista es incorrecta.", icon="🗝️")
         return
 
-     # Mostrar mensaje de bienvenida y presentación de Maia
+    # Mostrar mensaje de bienvenida y presentación de Maia
     st.success("¡Clave correcta! Bienvenido al sistema de atención médica.")
     st.write("Hola, soy Maia, tu asistente médica. Te voy a hacer algunas preguntas para entender mejor tu situación y poder ayudarte.")
 
