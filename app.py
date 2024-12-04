@@ -48,7 +48,7 @@ def main():
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
-        # Mensaje inicial del asistente
+        # Mensaje inicial del asistente, solo se envía si no hay mensajes previos
         if len(st.session_state.messages) == 0:
             initial_message = "Hola, soy Maia, tu asistente médica. Te voy a hacer algunas preguntas para entender mejor tu situación y poder ayudarte, ¿Comenzamos?"
             st.session_state.messages.append({"role": "assistant", "content": initial_message})
@@ -70,11 +70,12 @@ def main():
 
             # Ahora, invocamos la función del asistente para procesar la entrada del usuario
             assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
-            
-            # Aseguramos que la respuesta del asistente sea la correcta
+
+            # Verificamos la respuesta
             if assistant_response and "assistant_answer_text" in assistant_response:
                 assistant_answer = assistant_response["assistant_answer_text"]
                 st.session_state.thread_id = assistant_response["thread_id"]  # Actualizamos el thread_id
+                print(f"thread id de la conversación: {st.session_state.thread_id}")
             else:
                 assistant_answer = "Hubo un error al procesar la solicitud."
 
