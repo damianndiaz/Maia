@@ -68,9 +68,13 @@ def main():
             with st.chat_message("user"):
                 st.markdown(user_input)
 
+            print("Mensaje del usuario capturado:", user_input)  # Añadir log
+
             # Ahora, invocamos la función del asistente para procesar la entrada del usuario
             assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
             
+            print("Respuesta del asistente recibida:", assistant_response)  # Añadir log
+
             # Aseguramos que la respuesta del asistente sea la correcta
             if assistant_response and "assistant_answer_text" in assistant_response:
                 assistant_answer = assistant_response["assistant_answer_text"]
