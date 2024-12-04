@@ -103,7 +103,7 @@ def save_to_json(genero, edad, historial_de_salud, sintoma_principal, tiempo_de_
         "edad": edad,
         "historial_de_salud": historial_de_salud,
         "sintoma_principal": sintoma_principal,
-        "tiempo_de_evolución": tiempo_de evolución,
+        "tiempo_de_evolución": tiempo_de_evolución,
         "notas": notas
     })
 
