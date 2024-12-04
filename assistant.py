@@ -9,7 +9,7 @@ def get_assistant_answer(client, user_msg, thread_id=None, assistant_id="asst_5L
         print("Generando nuevo thread...")
         thread = client.beta.threads.create(
             messages=[  
-                {"role": "assistant", "content": "Soy un chatbot especializado en responder preguntas sobre los productos de Phytobiotics, ¿en qué puedo ayudarte?"}
+                {"role": "assistant", "content": "Hola, soy Maia, tu asistente médica. Te voy a hacer algunas preguntas para entender mejor tu situación y poder ayudarte, ¿Comenzamos?"}
             ]
         )
         thread_id = thread.id
