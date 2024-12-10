@@ -58,7 +58,7 @@ def main():
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
 
-        # Obtener la entrada del usuario desde la interfaz de chat
+        # Input del usuario
         user_input = st.chat_input("Escribe tu mensaje aquí...")
 
         # Cuando el usuario envía un mensaje
@@ -68,12 +68,8 @@ def main():
             with st.chat_message("user"):
                 st.markdown(user_input)
 
-            print("Mensaje del usuario capturado:", user_input)  # Añadir log
-
             # Ahora, invocamos la función del asistente para procesar la entrada del usuario
             assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
-            
-            print("Respuesta del asistente recibida:", assistant_response)  # Añadir log
 
             # Aseguramos que la respuesta del asistente sea la correcta
             if assistant_response and "assistant_answer_text" in assistant_response:
