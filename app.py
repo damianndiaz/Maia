@@ -1,26 +1,65 @@
 import streamlit as st
+import json
 from assistant import get_assistant_answer  # Importamos la función para interactuar con el asistente
 from openai import OpenAI
 import os
-from dotenv import load_dotenv
+import subprocess
+import logging
+
+# Configurar el logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
 
 st.set_page_config(page_title="Maia AI", page_icon=":speech_balloon:")
 
 # Cargar la clave API de OpenAI desde el archivo .env (o desde Streamlit secrets)
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
-# Obtener la clave secreta
-app_password = os.getenv("APP_PASSWORD")
-
 # Inicializamos el cliente de OpenAI
 if openai_api_key:
     openai_client = OpenAI(api_key=openai_api_key)
     if openai_client:
-        print("Cliente de OpenAI creado correctamente.")
+        logging.info("Cliente de OpenAI creado correctamente.")
 else:
-    st.error("Error al cargar la clave de API de OpenAI")
-    st.stop()  # Detiene la ejecución si no se encuentra la clave
+    logging.error("Error al cargar la clave de API de OpenAI")
+    st.stop()
 
+# Ruta donde se guardará el archivo JSON localmente
+JSON_FILE_PATH = "entrevistas.json"
+
+def save_to_json(data, file_path=JSON_FILE_PATH):
+    """
+    Guarda los datos en un archivo JSON.
+    """
+    try:
+        with open(file_path, "w", encoding="utf-8") as json_file:
+            json.dump(data, json_file, indent=4, ensure_ascii=False)
+        st.success(f"Datos guardados correctamente en {file_path}")
+    except Exception as e:
+        st.error(f"Error al guardar el archivo JSON: {e}")
+
+def push_to_github(file_path):
+    """
+    Realiza un commit y push del archivo JSON al repositorio remoto de GitHub.
+    """
+    try:
+        # Agregar el archivo al repositorio local
+        subprocess.run(["git", "add", file_path], check=True)
+
+        # Realizar el commit
+        commit_message = f"Actualización automática de {file_path}"
+        subprocess.run(["git", "commit", "-m", commit_message], check=True)
+
+        # Hacer push al repositorio remoto
+        subprocess.run(["git", "push"], check=True)
+
+        st.success(f"El archivo {file_path} se subió correctamente al repositorio de GitHub.")
+    except subprocess.CalledProcessError as e:
+        st.error(f"Error al ejecutar un comando de Git: {e}")
+        
 def main():
     # Mostrar título y descripción
     st.title("👩🏼‍⚕️ Maia.")
@@ -29,22 +68,17 @@ def main():
     # Autenticación
     proceed = False
     password = st.text_input("App Password", type="password")
-
     if not password:
         st.info("Por favor, ingrese la clave de la aplicación.", icon="🗝️")
+    elif password != st.secrets["app_password"]:
+        st.info("La clave provista es incorrecta.", icon="🗝️")
     else:
-        if password != st.secrets["app_password"]:
-            st.info("La clave provista es incorrecta.", icon="🗝️")
-        else:
-            proceed = True
+        proceed = True
 
-    # Si la clave es correcta, continuamos
     if proceed:
-        # Verificamos si 'thread_id' está en session_state, si no, lo inicializamos
+        # Inicializamos los estados de sesión
         if "thread_id" not in st.session_state:
             st.session_state.thread_id = None
-
-        # Inicializamos el historial de mensajes si no está en session_state
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
@@ -53,36 +87,51 @@ def main():
             initial_message = "Hola, soy Maia, tu asistente médica. Te voy a hacer algunas preguntas para entender mejor tu situación y poder ayudarte, ¿Comenzamos?"
             st.session_state.messages.append({"role": "assistant", "content": initial_message})
 
-        # Mostrar los mensajes en la conversación
+        # Mostrar los mensajes de la conversación
         for message in st.session_state.messages:
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
 
-        # Input del usuario
-        user_input = st.chat_input("Escribe tu mensaje aquí...")
+    # Entrada del usuario
+    user_input = st.chat_input("Escribe tu mensaje aquí...")
+    if user_input:
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        with st.chat_message("user"):
+            st.markdown(user_input)
 
-        # Cuando el usuario envía un mensaje
-        if user_input:
-            # Añade el mensaje del usuario a la sesión
-            st.session_state.messages.append({"role": "user", "content": user_input})
-            with st.chat_message("user"):
-                st.markdown(user_input)
+        # Obtener respuesta del asistente
+        assistant_response = get_assistant_answer(
+            client=openai_client,
+            user_msg=user_input,
+            thread_id=st.session_state.thread_id
+        )
 
-            # Ahora, invocamos la función del asistente para procesar la entrada del usuario
-            assistant_response = get_assistant_answer(openai_client, user_input, st.session_state.thread_id)
+        if assistant_response is None or "assistant_answer_text" not in assistant_response:
+            st.error("No se recibió una respuesta válida del asistente.")
+            return
 
-            # Aseguramos que la respuesta del asistente sea la correcta
-            if assistant_response and "assistant_answer_text" in assistant_response:
-                assistant_answer = assistant_response["assistant_answer_text"]
-                st.session_state.thread_id = assistant_response["thread_id"]  # Actualizamos el thread_id
-            else:
-                assistant_answer = "Hubo un error al procesar la solicitud."
+        # Guardar la respuesta del asistente
+        answer = assistant_response["assistant_answer_text"]
+        st.session_state.messages.append({"role": "assistant", "content": answer})
+        with st.chat_message("assistant"):
+            st.markdown(answer)
 
-            # Añadimos la respuesta del asistente a la sesión
-            st.session_state.messages.append({"role": "assistant", "content": assistant_answer})
-            with st.chat_message("assistant"):
-                st.markdown(assistant_answer)
+        # Simulación de datos de inserción
+        insert_data = {
+            "género": "masculino",
+            "edad": 25,
+            "historial_de_salud": "saludable",
+            "síntoma_principal": "cefalea",
+            "tiempo_de_evolución": "subagudo",
+            "notas": ""
+        }
 
-# Ejecutar la aplicación de Streamlit
-if __name__ == '__main__':
+        # Guardar los datos en un archivo JSON
+        save_to_json(insert_data)
+
+        # Subir el archivo JSON al repositorio de GitHub
+        push_to_github(JSON_FILE_PATH)
+
+# Iniciar la app
+if __name__ == "__main__":
     main()
